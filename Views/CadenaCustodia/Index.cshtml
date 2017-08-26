@@ -1,0 +1,133 @@
+@model IEnumerable<wms2_proj.Models.TblCadenaCustodia>
+
+@{
+    ViewData["Title"] = "Lista Cadenas de Custodia";
+}
+@{
+    var listaEmpleados = ViewData["ListaEmpleados"] as List<wms2_proj.Models.TblEmpleado>;
+}
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Lista Cadenas de Custodia</h2>
+        </div>
+    </div>
+    <p>
+        <a asp-action="Create">Crear Nueva Cadena Custodia</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                    <th style="text-align:center;">
+                        Codigo CC
+                    </th>
+                    <th style="text-align:center;">
+                        Muestrado Por
+                    </th>
+                    <th style="text-align:center;">
+                        Solicitado Por
+                    </th>
+                    <th style="text-align:center;">
+                        Enviado Por
+                    </th>
+                    <th style="text-align:center;">
+                        Fecha Envio
+                    </th>
+                    <th style="text-align:center;">
+                        Fecha Recepcion
+                    </th>
+                    <th style="text-align:center;">
+                        Instrucciones
+                    </th>
+                    <th style="text-align:center;">
+                        Recibido Por
+                    </th>
+                    <th style="text-align:center;">
+                        Referencia
+                    </th>
+                    <th style="text-align:center;">
+                        Laboratorio
+                    </th>
+                    <th style="text-align:center;">
+                        Acciones
+                    </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.IdCc)
+                </td>
+                <td style="text-align:center;">
+                    @foreach(var empleado in listaEmpleados) {
+                        @if(empleado.IdEmpleado == item.AprobadoPor)
+                        {
+                            @(empleado.Apellidos);
+                        }
+                    }
+                </td>
+                <td style="text-align:center;">
+                    @foreach(var empleado in listaEmpleados) {
+                        @if(empleado.IdEmpleado == item.CreadoPor)
+                        {
+                            @(empleado.Apellidos);
+                        }
+                    }
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.EnviadoPor)
+                </td>
+                <td style="text-align:center;">
+                    @(((DateTime)item.FechaEnvio).ToString("yyyy-MM-dd"))
+                </td>
+                <td style="text-align:center;">
+                    @(((DateTime)item.FechaRecepcion).ToString("yyyy-MM-dd"))
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.Instrucciones)
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.RecibidoPor)
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.Referencia)
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.IdLabNavigation.NombreLaboratorio)
+                </td>
+                <td style="text-align:center;">
+                    <a asp-action="Edit" asp-route-id="@item.IdCc">Actualizar</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdCc">Ver</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdCc">Eliminar</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+        background-color: skyblue;
+        color: white;
+    }
+</style>

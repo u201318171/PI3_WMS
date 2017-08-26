@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace wms2_proj.Models
+{
+    public partial class TblMaterial
+    {
+        public int IdMaterial { get; set; }
+        public string Descripcion { get; set; }
+        public string NombreMaterial { get; set; }
+    }
+}

@@ -1,0 +1,8 @@
+/Users/walter/Desktop/Walter/wms2_proj/bin/Debug/netcoreapp1.1/wms2_proj.deps.json
+/Users/walter/Desktop/Walter/wms2_proj/bin/Debug/netcoreapp1.1/wms2_proj.runtimeconfig.json
+/Users/walter/Desktop/Walter/wms2_proj/bin/Debug/netcoreapp1.1/wms2_proj.runtimeconfig.dev.json
+/Users/walter/Desktop/Walter/wms2_proj/bin/Debug/netcoreapp1.1/wms2_proj.dll
+/Users/walter/Desktop/Walter/wms2_proj/bin/Debug/netcoreapp1.1/wms2_proj.pdb
+/Users/walter/Desktop/Walter/wms2_proj/obj/Debug/netcoreapp1.1/wms2_proj.AssemblyInfo.cs
+/Users/walter/Desktop/Walter/wms2_proj/obj/Debug/netcoreapp1.1/wms2_proj.dll
+/Users/walter/Desktop/Walter/wms2_proj/obj/Debug/netcoreapp1.1/wms2_proj.pdb

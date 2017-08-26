@@ -1,0 +1,494 @@
+@model wms2_proj.Models.TblCadenaCustodia
+
+@{
+    ViewData["Title"] = "Cadena de Custodia";
+}
+<!-- <script type="text/javascript" src="@Url.Content("~/Scripts/test.js")"></script> -->
+
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Datos de Cadena de Custodia</h2>
+        </div>
+    </div>
+
+    <!-- <form asp-action="Create"> -->
+    <form >
+        <div class="form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Referencia" class="col-md-2 control-label">Referencia:</label>
+                <div class="col-md-10">
+                    <input asp-for="Referencia" class="form-control" id="referencia"/>
+                    <span class="my-css-error">* Debe ingresar una referencia</span>
+                    <span asp-validation-for="Referencia" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreadoPor" class="col-md-2 control-label">Solicitado Por:</label>
+                <div class="col-md-10">
+                    <select asp-for="CreadoPor" id="creadoPor" class ="form-control" asp-items="ViewBag.CreadoPor"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="AprobadoPor" class="col-md-2 control-label">Muestrado Por:</label>
+                <div class="col-md-10">
+                    <select asp-for="AprobadoPor" id="aprobadoPor" class ="form-control" asp-items="ViewBag.AprobadoPor"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaEnvio" class="col-md-2 control-label">Fecha Envio:</label>
+                <div class="col-md-10">
+                    <input type="date" asp-for="FechaEnvio" class="form-control" id="fechaEnvio"/>
+                    <span class="my-css-error">* Debe seleccionar una fecha</span>
+                    <span asp-validation-for="FechaEnvio" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnviadoPor" class="col-md-2 control-label">Enviado Por:</label>
+                <div class="col-md-10">
+                    <input asp-for="EnviadoPor" class="form-control" id="enviadoPor"/>
+                    <span class="my-css-error">* Debe ingresar quien lo envio</span>
+                    <span asp-validation-for="EnviadoPor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaRecepcion" class="col-md-2 control-label">Fecha Recepcion:</label>
+                <div class="col-md-10">
+                    <input type="date" asp-for="FechaRecepcion" class="form-control" id="fechaRecepcion"/>
+                    <span class="my-css-error">* Debe seleccionar una fecha</span>
+                    <span asp-validation-for="FechaRecepcion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecibidoPor" class="col-md-2 control-label">Recepcionado Por:</label>
+                <div class="col-md-10">
+                    <input asp-for="RecibidoPor" class="form-control" id="recepcionadoPor" />
+                    <span class="my-css-error">* Debe ingresar quien lo recepciono</span>
+                    <span asp-validation-for="RecibidoPor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdLab" class="col-md-2 control-label">Laboratorio</label>
+                <div class="col-md-10">
+                    <select asp-for="IdLab" id="idLab" class ="form-control" asp-items="ViewBag.IdLab"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Instrucciones" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Instrucciones" class="form-control" id="instrucciones"/>
+                    <span class="my-css-error">* Debe ingresar instrucciones</span>
+                    <span asp-validation-for="Instrucciones" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" id="submit" value="Grabar" class="btn btn-success" />
+                    <input type="button" id="limpiar" value="Limpiar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="details">
+        <h2>Detalle de Cadena Custodia</h2>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Muestras:</label>
+            <div class="col-md-10">
+                <select id="listaMuestras" class ="form-control" onchange="addMuestra(this)">
+                    <option>Select</option>
+                </select>
+                <span class="my-css-error">Seleccionar Muestra</span>
+            </div>
+        </div>
+        <table id="cadenaCustodiaCabecera" class="table table-responsive">
+        <tr>
+            <th style="text-align:center;">Muestra</th>
+            <th style="text-align:center;">Fecha</th>
+            <th style="text-align:center;">Hora Muestra</th>
+            <th style="text-align:center;">Matriz</th>
+            <th style="text-align:center;">Obs</th>
+            <th style="text-align:center;">Dentro Periodo</th>
+            <th style="text-align:center;">Analisis</th>
+            <th style="text-align:center;">Acciones</th>
+        </tr>
+        <tr class="mycontainer" id="mainrow">
+            <td>
+                <input type="text" id="detalleMuestraId" style="text-align:center;" class="detid form-control" readonly />
+            </td>
+            <td>
+                <input type="text" id="detalleFechaMuestra" style="text-align:center;" class="detfm form-control" readonly />
+            </td>
+            <td>
+                <input type="text" id="detalleHoraMuestra" style="text-align:center;" class="dethm form-control" readonly />
+            </td>
+            <td>
+                <input type="text" id="detalleMatrizMuestra" style="text-align:center;" class="detmm form-control" readonly />
+            </td>
+            <td>
+                <input type="text" id="detalleObservacionMuestra" style="text-align:center;" class="detom form-control" readonly />
+            </td>
+            <td>
+                <input type="checkbox" id="detalleDentroPeriodoMuestra" checked class="detpm form-control"/>
+            </td>
+            <td>
+                <select id="detalleAnalisisMuestra" class="detam form-control">
+                    <option>Seleccionar Analisis</option>
+                </select>
+                <span class="my-css-error">* Debe seleccionar un Analisis</span>
+            </td>
+            <td>
+                <input type="button" value="Agregar" id="agregarDetalle" class="btn btn-success" style="width:80px; height:30px;padding-top:0px;"/>
+            </td>
+        </tr>
+        </table>
+    </div>
+    <div>
+        <a asp-action="Index">Regresar</a>
+    </div>
+</div>
+
+<style>
+    .my-css-error {
+        display: inline;
+        visibility: hidden;
+        color: red;
+        font-size: 90%
+    }
+    .tr.error {
+        background-color: rgba(255,0,0,0,35);
+    }
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+</style>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+
+<script type="text/javascript">
+var averages = [];
+var ranges = [];
+
+var muestras = [];
+var analisis = [];
+
+function listarMuestras(element) {
+    if(muestras.length == 0)
+    {
+        $.ajax({
+            url: '/Muestra/getMuestras',
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                muestras = data;
+                cargaComboMuestras(element);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        })
+    }
+    else {
+        cargaComboMuestras(element);
+    }
+};
+
+function cargaComboMuestras(element){
+    var $ele = $(element);
+    $ele.empty();
+    $ele.append($('<option/>').val('0').text('Seleccionar Muestra'));
+    $.each(muestras, function(i, val){
+        $ele.append($('<option/>').val(val.IdMuestra).text(val.IdMuestra));
+    })
+};
+
+function addMuestra(muestraId){
+        $.ajax({
+            url: '/Muestra/getMuestraById',
+            data: {'idMuestra': $(muestraId).val()},
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                agregarMuetraDetalles(data);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        })
+};
+
+function agregarMuetraDetalles(muestra){
+    console.log("Into agregarMuetraDetalles function - muestra received: {0}", muestra);
+    var matriz = getMatrizById(muestra.IdMatriz);
+    console.log(matriz);
+
+    $('#detalleMuestraId').val(muestra.IdMuestra);
+    $('#detalleFechaMuestra').val(muestra.FechaMuestreo.toString('yyyy-MM-dd'));
+    $('#detalleHoraMuestra').val('00:00:00');
+    $('#detalleMatrizMuestra').val(matriz == null ? muestra.IdMatriz : matriz.Descripcion);
+    $('#detalleObservacionMuestra').val(muestra.Comentario);
+};
+
+function getMatrizById(matrizId){
+    console.log("Into getMatrizById function - matriz id: " + matrizId);
+
+    $.ajax({
+        url: '/Matriz/getMatrizById',
+        data: {'idMatriz': matrizId},
+        type: 'GET',
+        success: function(data){
+            console.log("Matriz api returns: {0}", data);
+            return data;
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+};
+
+function listarAnalisis(element) {
+    if(analisis.length == 0)
+    {
+        $.ajax({
+            url: '/Analisis/getAnalisis',
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                muestras = data;
+                cargaComboAnalisis(element);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        })
+    }
+    else {
+        cargaComboAnalisis(element);
+    }
+};
+
+function cargaComboAnalisis(element){
+    var $ele = $(element);
+    $ele.empty();
+    $ele.append($('<option/>').val('0').text('Seleccionar Analisis'));
+    $.each(muestras, function(i, val){
+        $ele.append($('<option/>').val(val.IdRequerimiento).text(val.NombreParametro));
+    })
+};
+
+function limpiarCabecera(){
+    $('#referencia,#enviadoPor,#recepcionadoPor,#fechaEnvio,#fechaRecepcion,#instrucciones').val('');
+    $('#creadoPor,#aprobadoPor,#idLab').val('0');
+};
+
+function limpiarDetalles(){
+    $('#detalleMuestraId,#detalleFechaMuestra,#detalleHoraMuestra,#detalleMatrizMuestra,#detalleObservacionMuestra').val('');
+    $('#detalleDentroPeriodoMuestra').val(1);
+    $('#detalleAnalisisMuestra').val('0');
+    $('#listaMuestras').val('0');
+};
+
+$(document).ready(function(){
+
+    var fechaActual = moment().format("YYYY-MM-DD");
+
+	$('#fechaEnvio').val(fechaActual);
+    $('#fechaRecepcion').val(fechaActual);
+
+    var detallesValidos = true;
+
+    $('#agregarDetalle').click(function(){
+
+        if($('#detalleMuestraId').val() == "")
+        {
+            detallesValidos = false;
+        }
+        else{
+            detallesValidos = true;
+        }
+        if($('#detalleAnalisisMuestra').val() == "0")
+        {
+            detallesValidos = false;
+            $('#detalleAnalisisMuestra').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            detallesValidos = true;
+            $('#detalleAnalisisMuestra').siblings('span.my-css-error').css('visibility','hidden');
+        }
+
+        if(detallesValidos)
+        {
+            var $newRow = $('#mainrow').clone().removeAttr('id');
+            $('.detid', $newRow).val($('#detalleMuestraId').val());
+            $('.detfm', $newRow).val($('#detalleFechaMuestra').val());
+            $('.dethm', $newRow).val($('#detalleHoraMuestra').val());
+            $('.detmm', $newRow).val($('#detalleMatrizMuestra').val());
+            $('.detom', $newRow).val($('#detalleObservacionMuestra').val());
+            $('.detpm', $newRow).val($('#detalleDentroPeriodoMuestra').val());
+            $('.detam', $newRow).val($('#detalleAnalisisMuestra').val());
+
+            $('#agregarDetalle', $newRow).addClass('remove').val('Remove').removeClass('btn-success').addClass('btn-danger');
+
+            $('#detalleMuestraId,#detalleFechaMuestra,#detalleHoraMuestra,#detalleMatrizMuestra,#detalleObservacionMuestra,#detalleDentroPeriodoMuestra,#detalleAnalisisMuestra', $newRow).removeAttr('id');
+            $('span.error', $newRow).remove();
+
+            $('#cadenaCustodiaCabecera').append($newRow);
+
+            $('#detalleMuestraId,#detalleFechaMuestra,#detalleHoraMuestra,#detalleMatrizMuestra,#detalleObservacionMuestra').val('');
+            $('#detalleDentroPeriodoMuestra').val(1);
+            $('#detalleAnalisisMuestra').val('0');
+            $('#listaMuestras').val('0');
+        }
+    });
+
+    $('#cadenaCustodiaCabecera').on('click','.remove', function(){
+        $(this).parents('tr').remove();
+    });
+
+    $('#limpiar').click(function(){
+        limpiarCabecera();
+    });
+
+    $('#submit').click(function(){
+        console.log("submit button was clicked");
+
+        var parametrosRequeridosValidos = true;
+
+        if($('#referencia').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#referencia').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#referencia').siblings('span.my-css-error').css('visibility','hidden');
+        }
+        if($('#enviadoPor').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#enviadoPor').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#enviadoPor').siblings('span.my-css-error').css('visibility','hidden');
+        }
+        if($('#fechaEnvio').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#fechaEnvio').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#fechaEnvio').siblings('span.my-css-error').css('visibility','hidden');
+        }
+        if($('#recepcionadoPor').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#recepcionadoPor').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#recepcionadoPor').siblings('span.my-css-error').css('visibility','hidden');
+        }
+        if($('#fechaRecepcion').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#fechaRecepcion').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#fechaRecepcion').siblings('span.my-css-error').css('visibility','hidden');
+        }
+        if($('#instrucciones').val() == "")
+        {
+            parametrosRequeridosValidos = false;
+            $('#instrucciones').siblings('span.my-css-error').css('visibility','visible');
+        }
+        else{
+            parametrosRequeridosValidos = true;
+            $('#instrucciones').siblings('span.my-css-error').css('visibility','hidden');
+        }
+
+        var listaDetalles = [];
+        if(parametrosRequeridosValidos)
+        {
+
+            var cadenaCustodia = {
+                Referencia: $('#referencia').val(),
+                EnviadoPor: $('#enviadoPor').val(),
+                RecibidoPor: $('#recepcionadoPor').val(),
+                CreadoPor: parseInt($('#creadoPor').val()),
+                AprobadoPor: parseInt($('#aprobadoPor').val()),
+                IdLab: parseInt($('#idLab').val()),
+                Instrucciones: $('#instrucciones').val(),
+                FechaEnvio: $('#fechaEnvio').val() + "T00:00:00",
+                FechaRecepcion: $('#fechaRecepcion').val() + "T00:00:00",
+            };
+
+            $('#cadenaCustodiaCabecera tbody tr').each(function (index, ele){
+
+                if(index > 1)
+                {
+                    var detalle = {
+                        IdMuestra: $('.detid', this).val(),
+                        IdRequerimiento: parseInt($('.detam', this).val()),
+                        DentroDePeriodo: $('.detpm', this).val() == "on" ? 1 : 0,
+                        Observaciones: $('.detom', this).val()
+                    };
+                    listaDetalles.push(detalle);
+                }
+            });
+
+            cadenaCustodia.TblCadenaCustodiaDetalle = listaDetalles;
+            console.log("cadenaCustodia a enviarse: {0}", cadenaCustodia);
+
+            $(this).val('Guardando...');
+
+             $.ajax({
+                url: '/CadenaCustodia/Create',
+                type: 'POST',
+                data: JSON.stringify(cadenaCustodia),
+                contentType: 'application/json',
+                success: function(data){
+                    if(data.status)
+                    {
+                        console.log(data);
+                    }
+
+                    limpiarCabecera();
+                    limpiarDetalles();
+
+                    $('#cadenaCustodiaCabecera tbody tr').each(function (index, ele){
+                    if(index > 1)
+                    {
+                        $(this).remove();
+                    }
+                    });
+                    
+                    $('#submit').text('Grabar');
+                    $('#submit').val('Grabar');
+                    alert('Los datos se grabaron correctamente');
+                    
+                },
+                error: function(error){
+                    console.log(error);
+                    $('#submit').text('Grabar');
+                    $('#submit').val('Grabar');
+                }
+            })
+
+        }
+
+    });
+
+});
+
+listarMuestras($('#listaMuestras'));
+listarAnalisis($('#detalleAnalisisMuestra'));
+
+</script>

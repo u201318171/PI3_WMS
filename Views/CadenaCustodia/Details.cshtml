@@ -1,0 +1,153 @@
+@model wms2_proj.Models.TblCadenaCustodia
+
+@{
+    ViewData["Title"] = "Detalles Cadena de Custodia";
+}
+@{
+    var listaMuestras = ViewData["ListaMuestras"] as List<wms2_proj.Models.TblMuestra>;
+    var idMatrizSelected = new wms2_proj.Models.TblMatriz();
+}
+
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Detalles Cadena de Custodia</h2>
+        </div>
+    </div>
+
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Solicitado Por:
+            </dt>
+            <dd>
+                @ViewBag.CreadoPor
+            </dd>
+            <dt>
+                Muestrado Por:
+            </dt>
+            <dd>
+                @ViewBag.AprobadoPor
+            </dd>
+            <dt>
+                Enviado Por:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EnviadoPor)
+            </dd>
+            <dt>
+                Fecha Envio:
+            </dt>
+            <dd>
+                @ViewBag.FechaEnvio
+            </dd>
+            <dt>
+                Fecha Recepcion:
+            </dt>
+            <dd>
+                @ViewBag.FechaRecepcion
+            </dd>
+            <dt>
+                Recepcionado Por:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.RecibidoPor)
+            </dd>
+            <dt>
+                Instrucciones:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Instrucciones)
+            </dd>
+            <dt>
+                Referencia:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Referencia)
+            </dd>
+            <dt>
+                Laboratorio:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IdLabNavigation.NombreLaboratorio)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Muestra</th>
+                    <th style="text-align:center;">Fecha</th>
+                    <th style="text-align:center;">Hora Muestra</th>
+                    <th style="text-align:center;">Matriz</th>
+                    <th style="text-align:center;">Observaciones</th>
+                    <th style="text-align:center;">Dentro Periodo</th>
+                    <th style="text-align:center;">Analisis</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var detalle in Model.TblCadenaCustodiaDetalle) {
+                <tr>
+                    <td style="text-align:center;">
+                        @Html.DisplayFor(modelItem => detalle.IdMuestra)
+                    </td>
+                    <td style="text-align:center;" id="fechaMuestra">
+                        @foreach(var muestra in listaMuestras) {
+                            @if(muestra.IdMuestra == detalle.IdMuestra)
+                            {
+                                idMatrizSelected = muestra.IdMatrizNavigation;
+                                @(((DateTime)muestra.FechaMuestreo).ToString("yyyy-MM-dd"));
+                            }
+                        }
+                    </td>
+                    <td style="text-align:center;" id="horaMuestra">
+                        00:00:00
+                    </td>
+                    <td style="text-align:center;" id="matrizMuestra">
+                        @idMatrizSelected.Descripción
+                    </td>
+                    <td style="text-align:center;">
+                        @Html.DisplayFor(modelItem => detalle.Observaciones)
+                    </td>
+                    <td style="text-align:center;">
+                            @((bool)detalle.DentroDePeriodo ? "SI" : "NO")
+                    </td>
+                    <td style="text-align:center;">
+                        @Html.DisplayFor(modelItem => detalle.IdRequerimientoNavigation.NombreParametro)
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="Model.IdCc">Actualizar</a> |
+        <a asp-action="Index">Regresar</a>
+    </div>
+</div>
+
+<style>
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+        background-color: skyblue;
+        color: white;
+    }
+</style>

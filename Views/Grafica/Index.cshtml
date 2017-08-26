@@ -1,0 +1,247 @@
+@{
+    ViewData["Title"] = "Graficas";
+}
+
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Generar Graficas de control de calidad de datos</h2>
+        </div>
+    </div>
+    <div>
+        <table class="table">
+            <tr class="Title">
+                <div class="form-group">
+                    <td>
+                        <label class="col-md-4 control-label">Periodo:</label>
+                    </td>
+                    <td>
+                        <input type="date" id="periodoDesde" name="periodoDesde" class="form-control">
+                        <span class="my-css-error">* Debe seleccionar una fecha</span>
+                    </td>
+                    <td>
+                        <input type="date" id="periodoHasta" name="periodoHasta" class="form-control">
+                        <span class="my-css-error">* Debe seleccionar una fecha</span>
+                    </td>
+                </div>
+            </tr>
+            <tr>
+                <div class="form-group">
+                    <td>
+                        <label class="col-md-2 control-label">Estaciones:</label>
+                    </td>
+                    <td colspan="2" >
+                        <div id="listaEstaciones">
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            <tr>
+                <div class="form-group">
+                    <td>
+                        <label class="col-md-2 control-label">Graficas:</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="radio" id="radio_tipo_graf_0" name="grafico" value="EBI" checked>  EBI
+                    </td>
+                </div>
+            </tr>
+            <tr>
+                <td><button type="button" id="generarGrafica" class="btn btn-success">Generar Grafica</td>
+                <td><button type="button" id="limpiar" onclick="limpiarParametros();" class="btn btn-default">Limpiar</td>
+                <!-- <td><button type="button" id="salir" class="btn btn-default">Salir</td> -->
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div id="divGrafica" style="visibility:hidden; min-width: 310px; height:400px; margin:0 10% 0 10%;">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<style>
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+    .my-css-error {
+        display: inline;
+        visibility: hidden;
+        color: red;
+        font-size: 90%
+    }
+</style>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<script type="text/javascript">
+
+    var estaciones = [];
+
+    function listarEstaciones(element) {
+        if(estaciones.length == 0)
+        {
+            $.ajax({
+                url: '/Estacion/getEstaciones',
+                type: 'GET',
+                success: function(data){
+                    console.log(data);
+                    estaciones = data;
+                    $.each(estaciones, function(i, val){
+                        if(i == 0)
+                        {
+                            $('<input type="radio" id="radio_est_'+i+'" name="estacion" value='+val.Name+' checked>  '+val.Name+'</input>').appendTo('#listaEstaciones');
+                        }
+                        else
+                        {
+                            $('<input type="radio" id="radio_est_'+i+'" name="estacion" value='+val.Name+'>  '+val.Name+'</input>').appendTo('#listaEstaciones');
+                        }
+                        $('<div style="height:1px;"></div>').appendTo('#listaEstaciones');
+                    })
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            })
+        }
+        else
+        {
+            $.each(estaciones, function(i, val){
+                if(i == 0)
+                {
+                    $('<input type="radio" id="radio_est_'+i+'" name="estacion" value='+val.Name+' checked>  '+val.Name+'</input>').appendTo('#listaEstaciones');
+                }
+                else
+                {
+                    $('<input type="radio" id="radio_est_'+i+'" name="estacion" value='+val.Name+'>  '+val.Name+'</input>').appendTo('#listaEstaciones');
+                }
+                $('<div style="height:1px;"></div>').appendTo('#listaEstaciones');
+            })
+        }
+    };
+
+    function limpiarParametros(){
+        var fechaActual = moment().format("YYYY-MM-DD");
+        $('#periodoDesde').val(fechaActual);
+        $('#periodoHasta').val(fechaActual);
+        $('#divGrafica').css('visibility','hidden');
+    };
+
+    $(document).ready(function(){
+
+        $('#divGrafica').css('visibility','hidden');
+
+        var fechaActual = moment().format("YYYY-MM-DD");
+        $('#periodoDesde').val(fechaActual);
+        $('#periodoHasta').val(fechaActual);
+
+        var parametrosValidos = true;
+
+        $('#generarGrafica').click(function(){
+
+            if($('#periodoDesde').val() == "")
+            {
+                parametrosValidos = false;
+                $('#periodoDesde').siblings('span.my-css-error').css('visibility','visible');
+            }
+            else{
+                parametrosValidos = true;
+                $('#periodoDesde').siblings('span.my-css-error').css('visibility','hidden');
+            }
+            if($('#periodoHasta').val() == "")
+            {
+                parametrosValidos = false;
+                $('#periodoHasta').siblings('span.my-css-error').css('visibility','visible');
+            }
+            else{
+                parametrosValidos = true;
+                $('#periodoHasta').siblings('span.my-css-error').css('visibility','hidden');
+            }
+
+            if(parametrosValidos)
+            {
+                var estacionSelected = $('input[name=estacion]:checked').val();
+                var periodoDesde = $('#periodoDesde').val();
+                var periodoHasta = $('#periodoHasta').val();
+
+                var url = '/Grafica/getEBIData?estacion='+estacionSelected+'&desde='+periodoDesde+'&hasta='+periodoHasta;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(data) {
+                        var averages = [];
+                        var ranges = [];
+                
+                        $.each(data, function(i, val) {
+                            averages[i] = [ new Date(val.fecha_muestreo).getTime(),val.EBI ];
+                            ranges[i] = [ new Date(val.fecha_muestreo).getTime(), val.Menos10, val.Mas10 ];
+                        });
+                        
+                        var tipoGrafica = $('#radio_tipo_graf_0').val();
+
+                        Highcharts.chart('divGrafica', {
+                                title: {
+                                    text: 'Grafica ' + tipoGrafica
+                                },
+                                xAxis: {
+                                    type: 'datetime'
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: tipoGrafica
+                                    }
+                                },
+                                tooltip: {
+                                    crosshairs: true,
+                                    shared: true,
+                                    valueSuffix: ','
+                                },
+                            
+                                legend: {
+                                },
+                            
+                                series: [{
+                                    name: 'Fecha',
+                                    data: averages,
+                                    zIndex: 1,
+                                    marker: {
+                                        fillColor: 'blue',
+                                        lineWidth: 2,
+                                        lineColor: Highcharts.getOptions().colors[9]
+                                    }
+                                }, {
+                                    name: '%' + tipoGrafica,
+                                    data: ranges,
+                                    type: 'arearange',
+                                    lineWidth: 0,
+                                    linkedTo: ':previous',
+                                    color: Highcharts.getOptions().colors[0],
+                                    fillOpacity: 0.3,
+                                    zIndex: 0,
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }]
+                            });
+                            $('#divGrafica').css('visibility','visible');
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    });
+
+    listarEstaciones($('#listaEstaciones'));
+
+</script>

@@ -1,0 +1,87 @@
+@model wms2_proj.Models.TblCadenaCustodia
+
+@{
+    ViewData["Title"] = "Eliminar Cadena de Custodia";
+}
+
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Eliminar Cadena de Custodia</h2>
+        </div>
+    </div>
+
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Solicitado Por:
+            </dt>
+            <dd>
+                @ViewBag.CreadoPor
+            </dd>
+            <dt>
+                Aprobado Por:
+            </dt>
+            <dd>
+                @ViewBag.AprobadoPor
+            </dd>
+            <dt>
+                Enviado Por:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EnviadoPor)
+            </dd>
+            <dt>
+                Fecha Envio:
+            </dt>
+            <dd>
+                @ViewBag.FechaEnvio
+            </dd>
+            <dt>
+                Fecha Recepcion:
+            </dt>
+            <dd>
+                @ViewBag.FechaRecepcion
+            </dd>
+            <dt>
+                Instrucciones:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Instrucciones)
+            </dd>
+            <dt>
+                Recibido Por:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.RecibidoPor)
+            </dd>
+            <dt>
+                Referencia:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Referencia)
+            </dd>
+            <dt>
+                Laboratorio:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IdLabNavigation.NombreLaboratorio)
+            </dd>
+        </dl>
+        
+        <form asp-action="Delete">
+            <div class="form-actions no-color">
+                <input type="submit" value="Eliminar" class="btn btn-default" /> |
+                <a asp-action="Index">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+</style>

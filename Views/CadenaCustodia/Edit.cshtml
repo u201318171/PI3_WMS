@@ -1,0 +1,104 @@
+@model wms2_proj.Models.TblCadenaCustodia
+
+@{
+    ViewData["Title"] = "Actualizar Cadena de Custodia";
+}
+
+<div>
+    <div class="form-group">
+        <div class="div-space"></div>
+        <div class="col-md-12" style="text-align:center;">
+            <h2>Actualizar Cadena de Custodia</h2>
+        </div>
+    </div>
+
+    <form asp-action="Edit">
+        <div class="form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+            <input type="hidden" asp-for="IdCc" />
+
+            <div class="form-group">
+                <label asp-for="CreadoPor" class="col-md-2 control-label">Solicitado Por:</label>
+                <div class="col-md-10">
+                    <select asp-for="CreadoPor" class="form-control" asp-items="ViewBag.CreadoPor"></select>
+                    <span asp-validation-for="CreadoPor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="AprobadoPor" class="col-md-2 control-label">Muestrado Por:</label>
+                <div class="col-md-10">
+                    <select asp-for="AprobadoPor" class="form-control" asp-items="ViewBag.AprobadoPor"></select>
+                    <span asp-validation-for="AprobadoPor" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="EnviadoPor" class="col-md-2 control-label">Enviado Por:</label>
+                <div class="col-md-10">
+                    <input asp-for="EnviadoPor" class="form-control" />
+                    <span asp-validation-for="EnviadoPor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaEnvio" class="col-md-2 control-label">Fecha Envio:</label>
+                <div class="col-md-10">
+                    <input type="date" asp-for="FechaEnvio" class="form-control" />
+                    <span asp-validation-for="FechaEnvio" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaRecepcion" class="col-md-2 control-label">Fecha Recepcion:</label>
+                <div class="col-md-10">
+                    <input type="date" asp-for="FechaRecepcion" class="form-control" />
+                    <span asp-validation-for="FechaRecepcion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdLab" class="control-label col-md-2">Laboratorio:</label>
+                <div class="col-md-10">
+                    <select asp-for="IdLab" class="form-control" asp-items="ViewBag.IdLab"></select>
+                    <span asp-validation-for="IdLab" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Instrucciones" class="col-md-2 control-label">Instrucciones:</label>
+                <div class="col-md-10">
+                    <input asp-for="Instrucciones" class="form-control" />
+                    <span asp-validation-for="Instrucciones" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecibidoPor" class="col-md-2 control-label">Recibido Por:</label>
+                <div class="col-md-10">
+                    <input asp-for="RecibidoPor" class="form-control" />
+                    <span asp-validation-for="RecibidoPor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Referencia" class="col-md-2 control-label">Referencia:</label>
+                <div class="col-md-10">
+                    <input asp-for="Referencia" class="form-control" />
+                    <span asp-validation-for="Referencia" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Guardar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <a asp-action="Index">Regresar</a>
+    </div>
+</div>
+
+<style>
+    .div-space {
+        width: 100%;
+        min-height: 30px;
+        float: left;
+    }
+</style>
